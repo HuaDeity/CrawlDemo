@@ -1,4 +1,6 @@
-# CrawlDemo
+# CrawlDemo  
+
+[中文说明](https://github.com/HuaDeity/CrawlDemo/blob/main/docs/中文说明.md)  
 
 This is a demonstration of how to crawl images.
 

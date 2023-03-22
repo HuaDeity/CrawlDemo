@@ -26,7 +26,7 @@ class GoogleSpider(scrapy.Spider):
         self.page_number = page_number
         if browser == "chrome":
             options = webdriver.ChromeOptions()
-            # options.add_argument('--headless=new')
+            options.add_argument('--headless=new')
             options.add_argument('--start-maximized')
             options.add_argument('--disable-extensions')
             options.add_argument('--disable-gpu')

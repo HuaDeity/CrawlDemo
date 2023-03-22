@@ -70,36 +70,30 @@ class GoogleSpider(scrapy.Spider):
         page = int(self.page_number)
         image_urls = []
         image_num = 0
+        if not os.path.exists(f"images/{self.search_term}"):
+                os.makedirs(f"images/{self.search_term}")
         while page > 0:
-        		page_source = driver.page_source
+            page_source = driver.page_source
             selector = Selector(text=page_source)
             images = selector.xpath("//img[@class='rg_i Q4LuWd']")
-			for image in images:
-				src = image.xpath("@src").get()
-				if src and "https://" in src:
-         			image_urls.append(src)
+            for image in images:
+                src = image.xpath("@src").get()
+                if src and "https://" in src:
+                    image_urls.append(src)
                 elif src and "data:image/jpeg;base64" in src:
-            			base64.b64decode(src.split(','[-1]))
+                    decoded_data = base64.b64decode(src.split(',')[-1])
                     file_name = f'image_{image_num}.jpg' 
                     file_name = os.path.join(f"images/{self.search_term}", file_name)
                     with open(file_name, "wb") as f:
-                    		f.write(decoded_data)
+                        f.write(decoded_data)
                     image_num += 1
-			last_height=driver.execute_script("return document.body.scrollHeight;")
-			driver.execute_script("window.scrollTo(0, {last_height});")
-            # 获取当前滚动的高度
-         	# current_scroll_height = driver.execute_script("return window.pageYOffset || document.documentElement.scrollTop;")
-            # 如果滚动到了屏幕底部，就退出循环
-            # if current_scroll_height + window_height >= driver.execute_script("return document.body.scrollHeight;") - 30:
-            #		break
-            # 否则，就继续逐行滚动
-            #else:
-            	#	driver.execute_script(f"window.scrollBy(0, {window_height});")
-				
+            last_height=driver.execute_script("return document.body.scrollHeight;")
+            driver.execute_script(f"window.scrollTo(0, {last_height});")
+            page -= 1
+            if page == 0:
+                break
         driver.quit()
 
-        if not os.path.exists(f"images/{self.search_term}"):
-                os.makedirs(f"images/{self.search_term}")
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'
         }
@@ -109,5 +103,5 @@ class GoogleSpider(scrapy.Spider):
             file_name = os.path.join(f"images/{self.search_term}", file_name)
             with open(file_name, "wb") as f:
                 shutil.copyfileobj(image_response.raw, f)
-            file_num += 1
+            image_num += 1
     

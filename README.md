@@ -1,25 +1,26 @@
 # CrawlDemo
 
-This is a demo of image crawling.
+This is a demonstration of how to crawl images.
 
 ## Features
 
-- Automate web crawling by retrieving images from website and flipping pages automatically.  
-- Support multiple browsers.
+- Automate web crawling to retrieve images and flip pages automatically on a website.
+
+- Add support for multiple browsers.
 
 ## Installation
 
 ### Requirements
 
 Python 3.7+  
-Chrome/Firefox/Edge/Safari
+Chrome / Firefox / Edge / Safari  
 
 ### Install
 
 ```bash
 git clone https://github.com/HuaDeity/CrawlDemo.git
-pip install -r requirements.txt
 cd CrawlDemo
+pip install -r requirements.txt
 ```
 
 ## Usage
@@ -29,12 +30,43 @@ cd millitary
 scrapy crawl gettyimages -a search_term=aircraftcarrier -a page_number=3 -a browser=chrome
 ```
 
-To retrieve a specific image, the user needs to provide three pieces of information: the search term (keyword), the desired page number, and their preferred web browser(chrome/firefox/edge/safari).  
+1. In order to retrieve a specific image, the user must provide the following information:
 
-The website support now:  
+    - Website (gettyimages/alamy/google/baidu)
+
+    - Search term (keyword)
+
+    - Desired page number
+
+    - Preferred web browser (chrome/firefox/edge/safari)
+
+2. A fast mode for google that can be activated by adding the parameter "-a fast=true". This mode skips downloading HTTPS images, which have slow connection establishment and results in faster download speeds compared to other websites. However, it may miss some images.
+
+The websites support now:  
 
 - [GettyImages](https://gettyimages.com/)
+
 - [Alamy](https://alamy.com/)
+
+- [Google](https://google.com/imghp)
+
+- [Baidu](https://image.baidu.com/)
+
+## Tips  
+
+- [Alamy](https://alamy.com/) images require a uniform crop of approximately 20px from the bottom.
+
+- The spider disabled [Baidu](https://image.baidu.com/)'s robots.txt file due to its anti-crawling mechanism, which may violate the website's terms of service.  
+
+## Comparison of Download Speeds
+
+- [Google](https://google.com/imghp)'s fast mode skips HTTPS images, making it faster than other websites.  
+
+- Both [Google](https://google.com/imghp)'s non-Fast mode and [Baidu](https://image.baidu.com/) are streaming websites that eliminate page loading time.  
+
+- [GettyImages](https://gettyimages.com/) uses regular pagination mode.  
+
+- [Alamy](https://alamy.com/) limits the number of images based on browser window size, requiring continuous scrolling and potentially causing slow loading times for users.  
 
 ## Contributing
 
@@ -46,5 +78,5 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Contact
 
-Yizun Wang  
+HuaDeity  
 [Email](mailto:wangyizun@mail.nwpu.edu.cn)

@@ -23,6 +23,8 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
+git clone https://github.com/HuaDeity/CrawlDemo.git
+cd CrawlDemo
 cd millitary
 scrapy crawl gettyimages -a search_term=aircraftcarrier -a page_number=3 -a browser=chrome
 ```

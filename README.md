@@ -4,7 +4,8 @@ This is a demo of image crawling.
 
 ## Features
 
-Automate web crawling by retrieving images from gettyimages.com and flipping pages automatically.
+- Automate web crawling by retrieving images from website and flipping pages automatically.  
+- Support multiple browsers.
 
 ## Installation
 
@@ -26,7 +27,12 @@ cd millitary
 scrapy crawl gettyimages -a search_term=aircraftcarrier -a page_number=3 -a browser=chrome
 ```
 
-To retrieve a specific image, the user needs to provide three pieces of information: the search term (keyword), the desired page number, and their preferred web browser**(chrome/firefox/edge/safari)**.
+To retrieve a specific image, the user needs to provide three pieces of information: the search term (keyword), the desired page number, and their preferred web browser(chrome/firefox/edge/safari).  
+
+The website support now:  
+
+- [GettyImages](https://gettyimages.com/)
+- [Alamy](https://alamy.com/)
 
 ## Contributing
 

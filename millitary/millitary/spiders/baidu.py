@@ -82,9 +82,8 @@ class BaiduSpider(scrapy.Spider):
                 src = image.xpath("@src").get()
                 if src and re.search(pattern, src):
                     image_urls.append(src)
-            last_height=driver.execute_script("return document.body.scrollHeight;")
-            driver.execute_script(f"window.scrollTo(0, {last_height});")
-            sleep(2)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            sleep(3)
             page -= 1
             if page == 0:
                 break

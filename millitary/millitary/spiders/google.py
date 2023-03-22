@@ -20,10 +20,14 @@ class GoogleSpider(scrapy.Spider):
     allowed_domains = ["google.com"]
     start_urls = ["https://google.com/"]
 
-    def __init__(self, search_term=None, page_number=None, browser=None, **kwargs):
+    def __init__(self, search_term=None, page_number=None, browser=None, fast=None, **kwargs):
         # 设置搜索关键词
         self.search_term = search_term
         self.page_number = page_number
+        if fast == "true":
+            self.fast = True
+        else:
+            self.fast = False
         if browser == "chrome":
             options = webdriver.ChromeOptions()
             options.add_argument('--headless=new')
@@ -87,21 +91,22 @@ class GoogleSpider(scrapy.Spider):
                     with open(file_name, "wb") as f:
                         f.write(decoded_data)
                     image_num += 1
-            last_height=driver.execute_script("return document.body.scrollHeight;")
-            driver.execute_script(f"window.scrollTo(0, {last_height});")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            sleep(3)
             page -= 1
             if page == 0:
                 break
         driver.quit()
 
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'
-        }
-        for image_url in image_urls:
-            image_response = requests.get(image_url, headers=headers, stream=True)
-            file_name = f'image_{image_num}.jpg' 
-            file_name = os.path.join(f"images/{self.search_term}", file_name)
-            with open(file_name, "wb") as f:
-                shutil.copyfileobj(image_response.raw, f)
-            image_num += 1
+        if self.fast == False:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'
+            }
+            for image_url in image_urls:
+                image_response = requests.get(image_url, headers=headers, stream=True)
+                file_name = f'image_{image_num}.jpg' 
+                file_name = os.path.join(f"images/{self.search_term}", file_name)
+                with open(file_name, "wb") as f:
+                    shutil.copyfileobj(image_response.raw, f)
+                image_num += 1
     

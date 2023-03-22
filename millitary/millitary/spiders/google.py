@@ -2,6 +2,7 @@ import scrapy
 import requests
 import os
 import shutil
+import base64
 from selenium import webdriver
 from selenium.webdriver.safari.options import Options as SafariOptions
 from scrapy_selenium import SeleniumRequest
@@ -68,25 +69,33 @@ class GoogleSpider(scrapy.Spider):
         search_box.send_keys(Keys.ENTER)
         page = int(self.page_number)
         image_urls = []
+        image_num = 0
         while page > 0:
-            while True:
-                page_source = driver.page_source
-                selector = Selector(text=page_source)
-                images = selector.xpath("//img[@class='rg_i Q4LuWd']")
-                for image in images:
-                    src = image.xpath("@src").get()
-                    if src and "https://" in src:
-                        image_urls.append(src)
-                break
-            break
-                # # 获取当前滚动的高度
-                # current_scroll_height = driver.execute_script("return window.pageYOffset || document.documentElement.scrollTop;")
-                # # 如果滚动到了屏幕底部，就退出循环
-                # if current_scroll_height + window_height >= driver.execute_script("return document.body.scrollHeight;") - 30:
-                #     break
-                # # 否则，就继续逐行滚动
-                # else:
-                #     driver.execute_script(f"window.scrollBy(0, {window_height});")
+        		page_source = driver.page_source
+            selector = Selector(text=page_source)
+            images = selector.xpath("//img[@class='rg_i Q4LuWd']")
+			for image in images:
+				src = image.xpath("@src").get()
+				if src and "https://" in src:
+         			image_urls.append(src)
+                elif src and "data:image/jpeg;base64" in src:
+            			base64.b64decode(src.split(','[-1]))
+                    file_name = f'image_{image_num}.jpg' 
+                    file_name = os.path.join(f"images/{self.search_term}", file_name)
+                    with open(file_name, "wb") as f:
+                    		f.write(decoded_data)
+                    image_num += 1
+			last_height=driver.execute_script("return document.body.scrollHeight;")
+			driver.execute_script("window.scrollTo(0, {last_height});")
+            # 获取当前滚动的高度
+         	# current_scroll_height = driver.execute_script("return window.pageYOffset || document.documentElement.scrollTop;")
+            # 如果滚动到了屏幕底部，就退出循环
+            # if current_scroll_height + window_height >= driver.execute_script("return document.body.scrollHeight;") - 30:
+            #		break
+            # 否则，就继续逐行滚动
+            #else:
+            	#	driver.execute_script(f"window.scrollBy(0, {window_height});")
+				
         driver.quit()
 
         if not os.path.exists(f"images/{self.search_term}"):
@@ -96,8 +105,9 @@ class GoogleSpider(scrapy.Spider):
         }
         for image_url in image_urls:
             image_response = requests.get(image_url, headers=headers, stream=True)
-            file_name = image_url.split("/")[-1].split("?")[1]
-            file_name = os.path.join(f"images/{self.search_term}", f"{file_name}.jpg")
+            file_name = f'image_{image_num}.jpg' 
+            file_name = os.path.join(f"images/{self.search_term}", file_name)
             with open(file_name, "wb") as f:
                 shutil.copyfileobj(image_response.raw, f)
+            file_num += 1
     

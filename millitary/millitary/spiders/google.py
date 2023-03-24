@@ -77,25 +77,25 @@ class GoogleSpider(scrapy.Spider):
         if not os.path.exists(f"images/{self.search_term}"):
                 os.makedirs(f"images/{self.search_term}")
         while page > 0:
-            page_source = driver.page_source
-            selector = Selector(text=page_source)
-            images = selector.xpath("//img[@class='rg_i Q4LuWd']")
-            for image in images:
-                src = image.xpath("@src").get()
-                if src and "https://" in src:
-                    image_urls.append(src)
-                elif src and "data:image/jpeg;base64" in src:
-                    decoded_data = base64.b64decode(src.split(',')[-1])
-                    file_name = f'image_{image_num}.jpg' 
-                    file_name = os.path.join(f"images/{self.search_term}", file_name)
-                    with open(file_name, "wb") as f:
-                        f.write(decoded_data)
-                    image_num += 1
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             sleep(3)
             page -= 1
             if page == 0:
                 break
+        page_source = driver.page_source
+        selector = Selector(text=page_source)
+        images = selector.xpath("//img[@class='rg_i Q4LuWd']")
+        for image in images:
+            src = image.xpath("@src").get()
+            if src and "https://" in src:
+                image_urls.append(src)
+            elif src and "data:image/jpeg;base64" in src:
+                decoded_data = base64.b64decode(src.split(',')[-1])
+                file_name = f'image_{image_num}.jpg' 
+                file_name = os.path.join(f"images/{self.search_term}", file_name)
+                with open(file_name, "wb") as f:
+                    f.write(decoded_data)
+                image_num += 1
         driver.quit()
 
         if self.fast == False:

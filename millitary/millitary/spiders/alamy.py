@@ -67,24 +67,15 @@ class AlamySpider(scrapy.Spider):
         # 获取浏览器窗口高度
         window_height = driver.execute_script("return window.innerHeight;")
         while page > 0:
-            while True:
-                wait = WebDriverWait(driver, 10)
-                element = wait.until(EC.presence_of_element_located((By.XPATH, "//a[@data-testid='pagination-next-page']")))
-                page_source = driver.page_source
-                selector = Selector(text=page_source)
-                images = selector.xpath("//img")
-                for image in images:
-                    src = image.xpath("@src").get()
-                    if src and "https://h7.alamy.com/" in src:
-                        image_urls.append(src)
-                # 获取当前滚动的高度
-                current_scroll_height = driver.execute_script("return window.pageYOffset || document.documentElement.scrollTop;")
-                # 如果滚动到了屏幕底部，就退出循环
-                if current_scroll_height + window_height >= driver.execute_script("return document.body.scrollHeight;") - 30:
-                    break
-                # 否则，就继续逐行滚动
-                else:
-                    driver.execute_script(f"window.scrollBy(0, {window_height});")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            sleep(20)
+            page_source = driver.page_source
+            selector = Selector(text=page_source)
+            images = selector.xpath("//img")
+            for image in images:
+                src = image.xpath("@src").get()
+                if src and "https://h7.alamy.com/" in src:
+                    image_urls.append(src)
             button = driver.find_element(By.XPATH, "//a[@data-testid='pagination-next-page']")
             driver.execute_script("arguments[0].click();", button)
             sleep(3)

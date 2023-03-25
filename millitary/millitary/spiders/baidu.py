@@ -41,7 +41,7 @@ class BaiduSpider(scrapy.Spider):
         search_box.send_keys(keyword)
         search_box.send_keys(Keys.ENTER)
         sleep(3)
-        image = int(self.page_number)
+        image = int(self.image_number)
         image_urls = []
 
         element = driver.find_element(By.CSS_SELECTOR, 'img.main_img')

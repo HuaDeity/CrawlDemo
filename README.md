@@ -74,11 +74,11 @@ The websites support now:
 
 ## FAQ
 
-1. To avoid repeated downloads on Google or Baidu, update to the latest version for a better user experience.
+1. To avoid repeated downloads on [Google](https://google.com/imghp/) or [Baidu](https://image.baidu.com/), update to the latest version for a better user experience.
 
-2. Google's quick mode for downloading images may result in insufficient downloads due to the exclusion of HTTPS images. To increase search results, it is recommended to use non-quick mode for searching and downloading.
+2. [Google](https://google.com/imghp/)'s quick mode for downloading images may result in insufficient downloads due to the exclusion of HTTPS images. To increase search results, it is recommended to use non-quick mode for searching and downloading.
 
-3. To avoid Gettyimages restricting access to your IP, it's advisable to reduce your crawling frequency. If you're still unable to download, consider changing your IP or waiting for a while before trying again.
+3. To avoid [Gettyimages](https://gettyimages.com/) restricting access to your IP, it's advisable to reduce your crawling frequency. If you're still unable to download, consider changing your IP or waiting for a while before trying again.
 
 ## Contributing
 

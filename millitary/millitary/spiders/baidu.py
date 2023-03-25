@@ -3,6 +3,7 @@ import requests
 import os
 import shutil
 import re
+from urllib.parse import unquote
 from selenium import webdriver
 from selenium.webdriver.safari.options import Options as SafariOptions
 from scrapy_selenium import SeleniumRequest
@@ -68,35 +69,45 @@ class BaiduSpider(scrapy.Spider):
         search_box = driver.find_element(By.XPATH, "//input[@name='word']")
         search_box.send_keys(keyword)
         search_box.send_keys(Keys.ENTER)
+        sleep(1)
         pattern = r"https://img\d+.baidu.com"
         page = int(self.page_number)
         image_urls = []
         image_num = 0
         if not os.path.exists(f"images/{self.search_term}"):
                 os.makedirs(f"images/{self.search_term}")
+        element = driver.find_element(By.CSS_SELECTOR, 'img.main_img')
+        element.click()
+        window_handles = driver.window_handles
+        driver.switch_to.window(window_handles[-1])
+        sleep(1)
+        last_src = ""
         while page > 0:
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            sleep(3)
+            img = driver.find_element(By.ID, 'srcPic').find_element(By.TAG_NAME, 'img')
+            src = img.get_attribute('src')
+            while last_src == src:
+                src = img.get_attribute('src')
+            last_src = src
+            image_urls.append(src)
             page -= 1
-            if page == 0:
-                break
-        page_source = driver.page_source
-        selector = Selector(text=page_source)
-        images = selector.xpath("//img")
-        for image in images:
-            src = image.xpath("@src").get()
-            if src and re.search(pattern, src):
-                image_urls.append(src)
+            driver.find_element(By.CLASS_NAME, 'img-next').click()
         driver.quit()
 
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'
         }
         for image_url in image_urls:
-            image_response = requests.get(image_url, headers=headers, stream=True)
-            file_name = f'image_{image_num}.jpg' 
-            file_name = os.path.join(f"images/{self.search_term}", file_name)
-            with open(file_name, "wb") as f:
-                shutil.copyfileobj(image_response.raw, f)
-            image_num += 1
-    
+            try:
+                image_response = requests.get(image_url, headers=headers, stream=True, timeout=10)
+                image_url = unquote(image_url)
+                file_name = image_url.split("/")[-1].split("?")[0].strip()
+                if len(file_name) == 0:
+                    continue
+                name, ext = os.path.splitext(file_name)
+                if not ext:
+                    file_name = f"{name}.jpg"
+                file_name = os.path.join(f"images/{self.search_term}", file_name)
+                with open(file_name, "wb") as f:
+                    shutil.copyfileobj(image_response.raw, f)
+            except Exception:
+                continue

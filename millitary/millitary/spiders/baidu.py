@@ -12,10 +12,10 @@ class BaiduSpider(scrapy.Spider):
     allowed_domains = ["baidu.com"]
     start_urls = ["https://baidu.com/"]
 
-    def __init__(self, search_term=None, page_number=None, browser=None, **kwargs):
+    def __init__(self, search_term=None, image_number=None, browser=None, **kwargs):
         # 设置搜索关键词
         self.search_term = search_term
-        self.page_number = page_number
+        self.image_number = image_number
         self.driver = util.get_web_driver(browser)
         
         super().__init__(**kwargs)
@@ -41,7 +41,7 @@ class BaiduSpider(scrapy.Spider):
         search_box.send_keys(keyword)
         search_box.send_keys(Keys.ENTER)
         sleep(3)
-        page = int(self.page_number)
+        image = int(self.page_number)
         image_urls = []
 
         element = driver.find_element(By.CSS_SELECTOR, 'img.main_img')
@@ -50,14 +50,14 @@ class BaiduSpider(scrapy.Spider):
         driver.switch_to.window(window_handles[-1])
         sleep(3)
         last_src = ""
-        while page > 0:
+        while image > 0:
             img = driver.find_element(By.CLASS_NAME, 'img-container').find_element(By.TAG_NAME, 'img')
             src = img.get_attribute('src')
             while last_src == src:
                 src = img.get_attribute('src')
             last_src = src
             image_urls.append(src)
-            page -= 1
+            image -= 1
             driver.find_element(By.CLASS_NAME, 'img-next').click()
         driver.quit()
 

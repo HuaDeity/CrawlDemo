@@ -56,6 +56,8 @@ The websites support now:
 
 ## Tips  
 
+- [GettyImages](https://gettyimages.com/) may need to change the keyword appropriately when searching in different regions, such as adding hyphens to get different search results.
+
 - [Alamy](https://alamy.com/) images require a uniform crop of approximately 20px from the bottom.
 
 - The spider disabled [Baidu](https://image.baidu.com/)'s robots.txt file due to its anti-crawling mechanism, which may violate the website's terms of service.  
@@ -68,7 +70,15 @@ The websites support now:
 
 - [GettyImages](https://gettyimages.com/) uses regular pagination mode.  
 
-- [Alamy](https://alamy.com/) limits the number of images based on browser window size, requiring continuous scrolling and potentially causing slow loading times for users.  
+- [Alamy](https://alamy.com/) need to wait for webpage images to load, the speed is relatively slow.
+
+## FAQ
+
+1. To avoid repeated downloads on Google or Baidu, update to the latest version for a better user experience.
+
+2. Google's quick mode for downloading images may result in insufficient downloads due to the exclusion of HTTPS images. To increase search results, it is recommended to use non-quick mode for searching and downloading.
+
+3. To avoid Gettyimages restricting access to your IP, it's advisable to reduce your crawling frequency. If you're still unable to download, consider changing your IP or waiting for a while before trying again.
 
 ## Contributing
 

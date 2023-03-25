@@ -83,9 +83,12 @@ class GettyimagesSpider(scrapy.Spider):
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.3 Safari/605.1.15'
         }
         for image_url in image_urls:
-            image_response = requests.get(image_url, headers=headers, stream=True)
-            file_name = image_url.split("/")[-1].split("?")[0]
-            file_name = os.path.join(f"images/{self.search_term}", file_name)
-            with open(file_name, "wb") as f:
-                shutil.copyfileobj(image_response.raw, f)
+            try:
+                image_response = requests.get(image_url, headers=headers, stream=True, timeout=10)
+                file_name = image_url.split("/")[-1].split("?")[0]
+                file_name = os.path.join(f"images/{self.search_term}", file_name)
+                with open(file_name, "wb") as f:
+                    shutil.copyfileobj(image_response.raw, f)
+            except Exception:
+                continue
     

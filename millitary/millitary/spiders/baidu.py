@@ -51,7 +51,7 @@ class BaiduSpider(scrapy.Spider):
         sleep(3)
         last_src = ""
         while page > 0:
-            img = driver.find_element(By.ID, 'srcPic').find_element(By.TAG_NAME, 'img')
+            img = driver.find_element(By.CLASS_NAME, 'img-container').find_element(By.TAG_NAME, 'img')
             src = img.get_attribute('src')
             while last_src == src:
                 src = img.get_attribute('src')

@@ -30,19 +30,18 @@ pip install -r requirements.txt
 ```bash
 cd millitary
 scrapy crawl gettyimages -a search_term=aircraftcarrier -a page_number=3 -a browser=chrome
+scrapy crawl baidu -a search_term=航空母舰 -a image_number=10000 -a browser=chrome
 ```
 
-1. In order to retrieve a specific image, the user must provide the following information:
+In order to retrieve a specific image, the user must provide the following information:
 
-    - Website (gettyimages/alamy/google/baidu)
+- Website (gettyimages/alamy/google/baidu)
 
-    - Search term (keyword)
+- Search term (keyword)
 
-    - Desired page number
+- Desired page number / image number (for baidu only)
 
-    - Preferred web browser (chrome/firefox/edge/safari)
-
-2. A fast mode for google that can be activated by adding the parameter "-a fast=true". This mode skips downloading HTTPS images, which have slow connection establishment and results in faster download speeds compared to other websites. However, it may miss some images.
+- Preferred web browser (chrome/firefox/edge/safari)
 
 The websites support now:  
 
@@ -64,9 +63,7 @@ The websites support now:
 
 ## Comparison of Download Speeds
 
-- [Google](https://google.com/imghp)'s fast mode skips HTTPS images, making it faster than other websites.  
-
-- Both [Google](https://google.com/imghp)'s non-Fast mode and [Baidu](https://image.baidu.com/) are streaming websites that eliminate page loading time.  
+- Both [Google](https://google.com/imghp) and [Baidu](https://image.baidu.com/) are streaming websites that eliminate page loading time.  
 
 - [GettyImages](https://gettyimages.com/) uses regular pagination mode.  
 
@@ -74,11 +71,7 @@ The websites support now:
 
 ## FAQ
 
-1. To avoid repeated downloads on [Google](https://google.com/imghp/) or [Baidu](https://image.baidu.com/), update to the latest version for a better user experience.
-
-2. [Google](https://google.com/imghp/)'s quick mode for downloading images may result in insufficient downloads due to the exclusion of HTTPS images. To increase search results, it is recommended to use non-quick mode for searching and downloading.
-
-3. To avoid [Gettyimages](https://gettyimages.com/) restricting access to your IP, it's advisable to reduce your crawling frequency. If you're still unable to download, consider changing your IP or waiting for a while before trying again.
+1. To avoid [Gettyimages](https://gettyimages.com/) restricting access to your IP, it's advisable to reduce your crawling frequency. If you're still unable to download, consider changing your IP or waiting for a while before trying again.
 
 ## Contributing
 

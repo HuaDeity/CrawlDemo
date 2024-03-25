@@ -1,12 +1,15 @@
-import scrapy
-import millitary.util as util
 from time import sleep
 from urllib.parse import unquote
+
+import scrapy
 from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import millitary.util as util
+
 
 class GoogleSpider(scrapy.Spider):
     name = "google"
@@ -36,9 +39,9 @@ class GoogleSpider(scrapy.Spider):
         driver.get(response.url)
         keyword = self.search_term
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//input[@name='q']"))
+            EC.presence_of_element_located((By.XPATH, "//textarea"))
         )
-        search_box = driver.find_element(By.XPATH, "//input[@name='q']")
+        search_box = driver.find_element(By.XPATH, "//textarea")
         search_box.send_keys(keyword)
         search_box.send_keys(Keys.ENTER)
         sleep(3)
@@ -52,7 +55,9 @@ class GoogleSpider(scrapy.Spider):
             if page == 0:
                 break
         elements = WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.XPATH, "//a[@class='wXeWr islib nfEiy']"))
+            EC.presence_of_all_elements_located(
+                (By.XPATH, "//*[contains(@class, 'islib nfEiy')]")
+            )
         )
         for i, element in enumerate(elements):
             try:
@@ -60,9 +65,12 @@ class GoogleSpider(scrapy.Spider):
             except Exception:
                 continue
             encoded_url = element.get_attribute("href")
-            decoded_url = unquote(encoded_url)
-            src = decoded_url.split('imgurl=')[1].split('&')[0]
-            image_urls.append(src)
+            try:
+                decoded_url = unquote(encoded_url)
+                src = decoded_url.split('imgurl=')[1].split('&')[0]
+                image_urls.append(src)
+            except Exception:
+                continue
         driver.quit()
 
         for image_url in image_urls:

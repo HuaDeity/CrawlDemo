@@ -1,9 +1,10 @@
-import requests
 import os
 import shutil
 from urllib.parse import unquote
+
+import requests
 from selenium import webdriver
-from selenium.webdriver.safari.options import Options as SafariOptions
+
 
 def get_web_driver(browser):
     if browser == "chrome":
@@ -27,7 +28,7 @@ def get_web_driver(browser):
         options.add_argument('--no-sandbox')
         driver = webdriver.Edge(options=options)
     elif browser == 'safari':
-        options = SafariOptions()
+        options = webdriver.SafariOptions()
         driver = webdriver.Safari(options=options)
     return driver
      

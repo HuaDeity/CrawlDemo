@@ -1,11 +1,14 @@
-import scrapy
-import millitary.util as util
 from time import sleep
+
+import scrapy
 from scrapy_selenium import SeleniumRequest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+import millitary.util as util
+
 
 class BaiduSpider(scrapy.Spider):
     name = "baidu"
@@ -48,7 +51,6 @@ class BaiduSpider(scrapy.Spider):
         element.click()
         window_handles = driver.window_handles
         driver.switch_to.window(window_handles[-1])
-        sleep(3)
         last_src = ""
         while image > 0:
             img = driver.find_element(By.CLASS_NAME, 'img-container').find_element(By.TAG_NAME, 'img')
